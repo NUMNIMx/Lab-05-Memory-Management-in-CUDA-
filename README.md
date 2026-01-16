@@ -1,32 +1,31 @@
-# Lab 5: Memory Management in CUDA
+# ใบงานที่ 5: การจัดการหน่วยความจำบน CUDA (Memory Management in CUDA)
 
-This project demonstrates the performance differences between **Global**, **Shared**, and **Register** memory in CUDA using a Vector Addition example.
+โปรเจกต์นี้สาธิตการเปรียบเทียบประสิทธิภาพระหว่างหน่วยความจำแบบ **Global**, **Shared**, และ **Register** บน CUDA โดยใช้โจทย์การบวกเวกเตอร์ (Vector Addition)
 
-## 📂 File Structure
-- `lab5_memory.cu`: The complete source code containing:
-  - **Global Memory Kernel**: Standard implementation.
-  - **Shared Memory Kernel**: Uses shared memory as a buffer.
-  - **Register Memory Kernel**: Explicitly uses registers for computation.
-  - **Benchmark**: Runs tests with block sizes [1000, 2000, 3907, 8000].
+## 📂 โครงสร้างไฟล์
+- `lab5_memory.cu`: ซอร์สโค้ดหลักประกอบด้วย:
+  - **Global Memory Kernel**: การเขียนโค้ดแบบมาตรฐาน
+  - **Shared Memory Kernel**: การดึงข้อมูลมาพักใน Shared Memory ก่อนคำนวณ
+  - **Register Memory Kernel**: การดึงข้อมูลมาเก็บในตัวแปร Local (Register) เพื่อคำนวณ
+  - **Benchmark**: ฟังก์ชันสำหรับรันการทดสอบที่ขนาด Block ต่างๆ [1000, 2000, 3907, 8000]
 
-## 🚀 How to Run
+## 🚀 วิธีการรันโปรแกรม
 
-Since there is only one file, you can compile it directly with `nvcc`.
+เนื่องจากมีไฟล์เดียว สามารถใช้คำสั่ง `nvcc` ในการ Compile ได้โดยตรง
 
-### 1. Compile
+### 1. Compile (แปลภาษา)
 ```bash
 nvcc -o lab5_memory lab5_memory.cu
 ```
 
-### 2. Run
+### 2. Run (รันดโปรแกรม)
 ```bash
 ./lab5_memory
 ```
 
-## 📊 Expected Output
-You will see a table comparing the execution time (ms) for each memory type across different grid sizes.
+## 📊 ตัวอย่างผลลัพธ์
+โปรแกรมจะแสดงตารางเปรียบเทียบเวลา (ms) ของแต่ละหน่วยความจำ:
 
-Example:
 ```text
 Vector Addition (N=1000000)
 ========================================================================
@@ -38,7 +37,7 @@ Register Memory      256             3907            0.01203
 ...
 ```
 
-## 📝 Analysis
-- **Register Memory**: Fastest, as it uses on-chip registers with the lowest latency.
-- **Shared Memory**: Comparable to Global in this specific case (no data reuse), but essential for more complex algorithms.
-- **Global Memory**: High latency, but effectively hidden by the GPU's coalescing and caching mechanisms in sequential access patterns.
+## 📝 บทวิเคราะห์
+- **Register Memory**: ทำงานได้เร็วที่สุด เนื่องจากเป็นการเรียกใช้ข้อมูลจาก Register โดยตรงที่อยู่บน Chip ซึ่งมีความหน่วง (Latency) ต่ำที่สุด
+- **Shared Memory**: ประสิทธิภาพใกล้เคียงกับ Global ในกรณีนี้ เพราะไม่มีการใช้ข้อมูลซ้ำ (Data Reuse) ทำให้เสียเวลาโหลดข้อมูลเข้า Shared Memory โดยเปล่าประโยชน์
+- **Global Memory**: แม้จะมีความหน่วงสูง แต่ GPU มีกลไก Memory Coalescing และ Cache ที่ช่วยลดผลกระทบเมื่ออ่านข้อมูลแบบเรียงลำดับ
